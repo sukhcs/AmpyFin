@@ -60,7 +60,7 @@ The dynamic ranking system allows **AmpyFin** to:
   This GET endpoint provides the current holdings of the trading bot.
 
 - **Portfolio & Major ETFs Endpoint**: [https://ampyfin-api-app.onrender.com/portfolio_percentage](https://ampyfin-api-app.onrender.com/portfolio_percentage)  
-  This GET endpoint provides the current total profit percentage of the trading bot since going live. It also provides the current percentage for the benchmark QQQ and SPY etfs.
+  This GET endpoint provides the current total profit percentage of the trading bot since going live. It also provides the current percentage of the portfolio the NDAQ and SPY etfs.
 
 - **Test Endpoint**: [https://ampyfin-api-app.onrender.com/ticker/{ticker}](https://ampyfin-api-app.onrender.com/ticker/)  
   This GET endpoint provides the current sentiment of the trading bot on the particular ticker. Replace {ticker} with an actual ticker symbol. The ticker symbol should be in all caps. It doesn't need to be in the NDAQ-100 but must be listed in the NYSE or NASDAQ.
@@ -98,6 +98,21 @@ The dynamic ranking system allows **AmpyFin** to:
   - Updates algorithm scores based on trade performance.
   - Refreshes rankings every 30 seconds.
 
+### `ranking_setup.py`
+- **Objective**: Initializes and populates MongoDB collections with strategy ranks and their corresponding coefficients.
+- **Features**:
+  - **MongoDB Connection**: Connects to MongoDB using the provided connection string.
+  - **Initialize Rankings**:
+    - Sets up initial documents for each trading strategy in the `algorithm_holdings` collection.
+    - Initializes the `points_tally` collection for tracking points for each strategy.
+  - **Insert Rank to Coefficient Mappings**:
+    - Clears existing entries in the `rank_to_coefficient` collection.
+    - Calculates and inserts coefficient values for ranks from 1 up to a specified maximum rank.
+  - **Execution Flow**:
+    - Runs `initialize_rank` to set up necessary collections and documents.
+    - Executes `insert_rank_to_coefficient` to populate rank-coefficient mappings.
+    - Prints confirmation messages upon successful completion of each operation.
+
 ### `trading_strategies.py`
 - **Objective**: Defines various trading strategies.
 - **Features**:
@@ -122,8 +137,8 @@ The dynamic ranking system allows **AmpyFin** to:
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/yeonholee50/polygon-trading-bot.git
-    cd polygon-trading-bot
+    git clone https://github.com/yeonholee50/AmpyFin.git
+    cd AmpyFin
     ```
 
 2. **Install Dependencies**:
@@ -134,10 +149,19 @@ The dynamic ranking system allows **AmpyFin** to:
 3. **Set Up MongoDB**:
    - Sign up for a MongoDB cluster (e.g., via [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)).
    - Get your MongoDB connection string and create a database for stock data storage.
-   - Replace my MongoDB string in the mongo_url variable in trading_client.py and ranking_client.py.
-   - Make sure to give yourself database access for both network and database itself. For network, add your IP or add 0.0.0.0/0. For database, give yourself access to the database by creating a user and password.
-   - Run initialize_rank and insert_rank_to_coefficient(100) in ranking_client.py to initialize the trading simulator.
-   
+   - Database Structure:
+     - market_data
+       - market_structure
+     - trading_simulator
+       - algorithm_holdings
+       - points_tally
+       - rank
+       - time_delta
+
+4. **Run ranking_setup.py**
+  - This initializes some tables in the db that we'll need later
+
+5. **See 'Usage' ***
 
 ## **Configuration**
 
@@ -148,9 +172,10 @@ The dynamic ranking system allows **AmpyFin** to:
     FINANCIAL_PREP_API_KEY = "your_fmp_api_key"
     MONGO_DB_USER = "your_mongo_user"
     MONGO_DB_PASS = "your_mongo_password"
+    MONGO_DB_STRING = "your_mongo_string"
     API_KEY = "your_alpaca_api_key"
     API_SECRET = "your_alpaca_secret_key"
-    BASE_URL = "https://paper-api.alpaca.markets"
+    BASE_URL = "https://paper-api.alpaca.markets/v2"
     ```
 
 ## **API Setup**
@@ -175,6 +200,8 @@ python ranking_client.py
 python trading_client.py
 ```
 
+Make sure you have collected a few days worth of data by running ranking_client before running both simultaneously
+
 ## Logging
 
 The bot logs all major events and errors to a `system.log` file, including API errors, MongoDB operations, and market status checks. You can access the log file to review the bot's activities and diagnose potential issues. The bot will also log rank events to a separate `rank.log` file.
@@ -186,7 +213,7 @@ The bot logs all major events and errors to a `system.log` file, including API e
 
 ## Contributing
 
-Contributions are welcome! Feel free to open a pull request or submit issues for bugs or feature requests. Future improvements may focus on optimizing the ranking system or expanding the bot's capabilities for more advanced trading strategies. All contributions should be made on the test branch. Please do not make it on the main branch
+Contributions are welcome! Feel free to open a pull request or submit issues for bugs or feature requests. Future improvements may focus on optimizing the ranking system or expanding the bot's capabilities for more advanced trading strategies.
 
 ## License
 

@@ -147,7 +147,7 @@ function App() {
                   <p 
                     className={`decision ${ampyfinResult.decision}`}
                   >
-                    Decision: <strong>{ampyfinResult.decision}</strong> @ current price of ${ampyfinResult.current_price}
+                    Decision: <strong>{ampyfinResult.decision}</strong> @ current price of {ampyfinResult.current_price}
                   </p>
                   
                   <p>Buy Weight: {ampyfinResult.buy_weight}</p>
@@ -250,7 +250,7 @@ function BenchmarkSection({ portfolioPercentage, ndaqPercentage, spyPercentage }
         <p className="live-since">Total Percentage since November 20, 2024, at 8:00 AM</p>
       </div>
       <div className={`portfolio-percentage ${ndaqPercentage > 0 ? 'green' : 'red'}`}>
-        QQQ: {formatPercentage(ndaqPercentage)}
+        NDAQ: {formatPercentage(ndaqPercentage)}
         <p className="live-since">Total Percentage since November 20, 2024, at 8:00 AM</p>
       </div>
       <div className={`portfolio-percentage ${spyPercentage > 0 ? 'green' : 'red'}`}>

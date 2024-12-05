@@ -1,5 +1,5 @@
 from polygon import RESTClient
-from config import POLYGON_API_KEY, FINANCIAL_PREP_API_KEY, MONGO_DB_USER, MONGO_DB_PASS, API_KEY, API_SECRET, BASE_URL
+from config import POLYGON_API_KEY, FINANCIAL_PREP_API_KEY, MONGO_DB_USER, MONGO_DB_PASS, API_KEY, API_SECRET, BASE_URL, MONGO_DB_STRING
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
@@ -64,7 +64,8 @@ logging.basicConfig(
 )
 
 # Connect to MongoDB  
-mongo_url = f"mongodb+srv://{MONGO_DB_USER}:{MONGO_DB_PASS}@cluster0.0qoxq.mongodb.net"
+# mongo_url = f"mongodb+srv://{MONGO_DB_USER}:{MONGO_DB_PASS}@cluster0.0qoxq.mongodb.net"
+mongo_url = MONGO_DB_STRING
 
 def find_nans_within_rank_holding():
    mongo_client = MongoClient(mongo_url)
@@ -419,7 +420,7 @@ def main():
         update_portfolio_values()
   
         logging.info("Finished processing all strategies. Waiting for 60 seconds.")  
-        time.sleep(600)  
+        time.sleep(60)  
   
       elif status == "early_hours":  
         if early_hour_first_iteration:  
