@@ -17,21 +17,19 @@ load_dotenv()
 app = FastAPI()
 
 # MongoDB credentials from environment variables (imported from config)
+from config import MONGO_DB_USER, MONGO_DB_PASS, API_KEY, API_SECRET, MONGO_DB_STRING
 
 
 MONGO_DB_USER = os.getenv("MONGO_DB_USER")
 MONGO_DB_PASS = os.getenv("MONGO_DB_PASS")
+# MONGODB_URL = f"mongodb+srv://{MONGO_DB_USER}:{MONGO_DB_PASS}@cluster0.0qoxq.mongodb.net/?retryWrites=true&w=majority"
+MONGODB_URL = MONGO_DB_STRING
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
 
 """
 comment out when uploading for change
-
-from config import MONGO_DB_USER, MONGO_DB_PASS, API_KEY, API_SECRET
 """
-
-
-MONGODB_URL = f"mongodb+srv://{MONGO_DB_USER}:{MONGO_DB_PASS}@cluster0.0qoxq.mongodb.net/?retryWrites=true&w=majority"
 
 # Initialize MongoDB client
 client = AsyncIOMotorClient(MONGODB_URL)

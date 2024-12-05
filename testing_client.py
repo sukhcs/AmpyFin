@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from alpaca.data.historical import StockHistoricalDataClient  
 from alpaca.data.requests import StockBarsRequest  
 from alpaca.data.timeframe import TimeFrame  
-from config import API_KEY, API_SECRET, FINANCIAL_PREP_API_KEY, POLYGON_API_KEY
+from config import API_KEY, API_SECRET, FINANCIAL_PREP_API_KEY, POLYGON_API_KEY, MONGO_DB_STRING
 import strategies.trading_strategies_v2_1 as ts
 import helper_files.client_helper
 from pymongo import MongoClient
@@ -12,7 +12,8 @@ from helper_files.client_helper import get_ndaq_tickers, get_latest_price
 from config import MONGO_DB_USER, MONGO_DB_PASS
 from helper_files.client_helper import get_latest_price
 import requests
-mongo_url = f"mongodb+srv://{MONGO_DB_USER}:{MONGO_DB_PASS}@cluster0.0qoxq.mongodb.net"
+# mongo_url = f"mongodb+srv://{MONGO_DB_USER}:{MONGO_DB_PASS}@cluster0.0qoxq.mongodb.net"
+mongo_url = MONGO_DB_STRING
 
 def get_historical_data(ticker, client, days=100):  
    """  
@@ -70,19 +71,9 @@ def test_strategies():
          except Exception as e:
             print(f"ERROR processing {ticker} for {strategy.__name__}: {e}")
    
-   
-   
-   
-
-   
-   
-      
-   
 def test_helper():
-   ticker = 'MSFT'  # Replace with your desired ticker
-   # Initialize the StockHistoricalDataClient
-   client = StockHistoricalDataClient(API_KEY, API_SECRET)
-   get_historical_data(ticker, client)
+   ticker = 'SPY'  # Replace with your desired ticker
+
    
    print(get_latest_price(ticker))
 if __name__ == "__main__":  
